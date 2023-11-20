@@ -20,7 +20,7 @@ from openswath_feature import get_os_features
 from discriminate import calc_score_cut, calc_results
 
 
-# debug_mode = True
+# debug_mode = False
 # # 4G
 # map_size = 2**32
 # tfdr = 0.01
@@ -35,9 +35,11 @@ from discriminate import calc_score_cut, calc_results
 
 # seed = 123
 
-# db_fpath = "/mnt/public/lyc/project/Multiple-runs/MR-MCB/08-benchmark/pyprophet/merged.osw"
-# chrom_dpath = "/mnt/public/lyc/project/Multiple-runs/MR-MCB/08-benchmark/os/"
-# work_dpath = "/mnt/public/lyc/project/Multiple-runs/MR-MCB/08-benchmark/joint/work_jointAnalysis"
+# db_fpath = "/mnt/public/lyc/project/JointAnalysis/BenchMark/MCB/DIA_lib/pyprophet/lda_0.01/merged.osw"
+# chrom_dpath = "/mnt/public/lyc/project/JointAnalysis/BenchMark/MCB/DIA_lib/OpenSwath"
+# work_dpath = "/mnt/public/lyc/project/JointAnalysis/BenchMark/MCB/DIA_lib/jointAnalysis/lda_0.01"
+
+# joint_analysis(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf, map_size, tfdr, nrt_interval_percent, nrt_width_percent, seed, debug_mode)
 
 def joint_analysis(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf, map_size, tfdr, nrt_interval_percent, nrt_width_percent, seed, debug_mode):
     map_size = 2 ** map_size
@@ -53,7 +55,7 @@ def joint_analysis(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf,
 
     feature2ndscore_fpath = os.path.join(work_dpath, "feature2ndscore.db")
     logger.info(f'Save ndscores to db: {feature2ndscore_fpath}')
-    # build_feature2ndscore(db_fpath, feature2ndscore_fpath, map_size)
+    build_feature2ndscore(db_fpath, feature2ndscore_fpath, map_size)
 
     logger.info(f'Organize the necessary inputs')
     rid2rn = get_db_rid2rn(db_fpath)

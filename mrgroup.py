@@ -164,6 +164,17 @@ def return_cmrg(pt_bm, p_fid2xics, precur_id, min_nuf, nrt_width, debug_mode):
             assert nrtdiff_matrix.shape[0] == nrtdiff_matrix.shape[1], f'nrtdiff matrix must have the same shape.'
             assert reps_matrix.min() >= 0, f'min(reps_matrix) cannot be less than zero.'
             assert reps_matrix.shape[0] == reps_matrix.shape[1], f'reps matrix must have the same shape.'
+        else:
+            if sm_matrix.min() < 0 or sm_matrix.max() > 1:
+                continue
+            elif sm_matrix.shape[0] != sm_matrix.shape[1]:
+                continue
+            elif nrtdiff_matrix.min() < 0 or nrtdiff_matrix.max() > 1:
+                continue
+            elif nrtdiff_matrix.shape[0] != nrtdiff_matrix.shape[1]:
+                continue
+            elif reps_matrix.min() < 0 or reps_matrix.shape[0] != reps_matrix.shape[1]:
+                continue
 
         initial_sub_js = (sm_matrix * nrtdiff_matrix * reps_matrix).sum(axis = 0)
         # cmrg.set_init_messages(initial_sub_js, sm_matrix, nrtdiff_matrix, reps_matrix, initial_repss)
