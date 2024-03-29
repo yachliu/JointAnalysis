@@ -119,5 +119,5 @@ def return_xics_by_fid(p_table, p_rid2xics, p_rid2rts, logger):
         elif left_n_pad <= 0 and right_n_pad <= 0:
             p_fid2xics_pad[k] = v[:, -right_n_pad : left_n_pad]
         else:
-            logger.error(f'Error: {right_n_pad}, {pad_n_pad}')
+            logger.error(f'Error: {right_n_pad}, {left_n_pad}')
     return p_fid2xics_pad, p_xic_unified_length

@@ -18,6 +18,7 @@ from mrgroup import get_cmrg_messages
 from format_data import return_mr_features, initial_format, output_format
 from openswath_feature import get_os_features
 from discriminate import calc_score_cut, calc_results
+from reports import stats
 
 
 # debug_mode = False
@@ -124,15 +125,50 @@ def joint_analysis(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf,
 
     logger.info(f'Output results')
     mr_iter_res = output_format(db_fpath, mr_iter_res)
-    mr_iter_res.to_csv(os.path.join(work_dpath, "jointAnalysis_results.tsv"), sep = "\t")
+    results = output_format1(db_fpath, mr_iter_res)
+
+    trans = []
+    for _, (mseq, charge, decoy) in enumerate(zip(results["FullPeptideName"].values, results["Charge"].values, results["decoy"].values)):
+        if decoy == 0:
+            trans.append(mseq + "_" + str(charge))
+        else:
+            trans.append("DECOY_" + mseq + "_" + str(charge))
+    results["transition_group_id"] = trans
+    results_format = results.loc[:, ["transition_group_id",
+                                    "decoy",
+                                    "run_id",
+                                    "filename", 
+                                    "RT",
+                                    "assay_rt",
+                                    "delta_rt",
+                                    "iRT",
+                                    "Sequence",
+                                    "FullPeptideName",
+                                    "Charge",
+                                    "mz",
+                                    "Intensity",
+                                    "aggr_prec_Peak_Area",
+                                    "aggr_prec_Peak_Apex",
+                                    "leftWidth",
+                                    "rightWidth",
+                                    "ProteinName",
+                                    "jd_score"]]
+
+
+    results_format = stats(results_format, "jd_score", logger)
+
+
+
+
+    results_format.to_csv(os.path.join(work_dpath, "jointAnalysis_results.tsv"), sep = "\t")
     logger.info(f'jointAnalysis_results: {os.path.join(work_dpath, "jointAnalysis_results.tsv")}')
 
-    fdrs, final_cut = calc_score_cut(mr_iter_res, "JOINT_DS", "DECOY", 0.8 * tfdr, smooth_factor = 0.01, plot = False)
-    mr_iter_fdr = mr_iter_res[mr_iter_res["JOINT_DS"] >= final_cut].reset_index(drop = True)
-    precursor_fdr = (mr_iter_fdr["DECOY"] == 1).sum() / mr_iter_fdr.shape[0]
-    logger.info(f'Precursor fdr: {np.around(precursor_fdr, 5)}, Expect fdr: {tfdr}, Number of precursor: {mr_iter_fdr.shape[0]}')
-    mr_iter_fdr.to_csv(os.path.join(work_dpath, "jointAnalysis_fdr_results.tsv"), sep = "\t")
-    logger.info(f'jointAnalysis_fdr_results: {os.path.join(work_dpath, "jointAnalysis_fdr_results.tsv")}')
+    # fdrs, final_cut = calc_score_cut(mr_iter_res, "JOINT_DS", "DECOY", 0.8 * tfdr, smooth_factor = 0.01, plot = False)
+    # mr_iter_fdr = mr_iter_res[mr_iter_res["JOINT_DS"] >= final_cut].reset_index(drop = True)
+    # precursor_fdr = (mr_iter_fdr["DECOY"] == 1).sum() / mr_iter_fdr.shape[0]
+    # logger.info(f'Precursor fdr: {np.around(precursor_fdr, 5)}, Expect fdr: {tfdr}, Number of precursor: {mr_iter_fdr.shape[0]}')
+    # mr_iter_fdr.to_csv(os.path.join(work_dpath, "jointAnalysis_fdr_results.tsv"), sep = "\t")
+    # logger.info(f'jointAnalysis_fdr_results: {os.path.join(work_dpath, "jointAnalysis_fdr_results.tsv")}')
     logger.info(f'Done')
 
 

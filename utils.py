@@ -41,9 +41,8 @@ def return_sm_matrix(mr_xics):
     n = mr_xics.shape[0]
     sm_matrix = np.zeros((n, n))
     for i in range(n):
-        for j in range(i, n):
+        for j in range(n):
             sm_matrix[i, j] = pearson_corrcoef_between_arrays(mr_xics[i], mr_xics[j])
-            sm_matrix[j, i] = sm_matrix[i, j]
     return sm_matrix
 
 @numba.jit(nopython = True)
