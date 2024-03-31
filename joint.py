@@ -113,7 +113,7 @@ def joint_analysis(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf,
     mr_iter_features = initial_format(db_fpath, mr_iter_features, os_feature_pd)
 
     logger.info(f'Discriminate')
-    ignored_columns = ["PRECURSOR_ID", "DECOY", "RUN_ID", "RIGHT_WIDTH", "LEFT_WIDTH", "AREA_INTENSITY"]
+    ignored_columns = ["PRECURSOR_ID", "decoy", "run_id", "RT", "delta_rt", "rightWidth", "leftWidth", "Intensity", "aggr_prec_Peak_Area", "aggr_prec_Peak_Apex"]
     iter_mr_columns = [col for col in mr_iter_features.columns if col not in ignored_columns]
 
     mr_iter_res = calc_results(scored_columns = iter_mr_columns,
@@ -125,7 +125,7 @@ def joint_analysis(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf,
 
     logger.info(f'Output results')
     mr_iter_res = output_format(db_fpath, mr_iter_res)
-    results = output_format1(db_fpath, mr_iter_res)
+    results = output_format(db_fpath, mr_iter_res)
 
     trans = []
     for _, (mseq, charge, decoy) in enumerate(zip(results["FullPeptideName"].values, results["Charge"].values, results["decoy"].values)):
