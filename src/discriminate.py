@@ -69,7 +69,7 @@ def calc_results(scored_columns, initial_column, initial_ascending, data_pd, n_t
     labels = scored_pd_iteration["decoy"].values
 
     cl = XGBClassifier(n_jobs = n_threads, max_depth = max_depth, random_state = seed, gamma = 0.05, reg_alpha = 0.01,
-                       reg_lambda = 0.1, subsample = 0.6)
+                       reg_lambda = 0.1, subsample = 0.6, use_label_encoder=False, eval_metric="logloss")
 
 
     cl.fit(trains, labels)
@@ -90,7 +90,7 @@ def calc_results(scored_columns, initial_column, initial_ascending, data_pd, n_t
     # print(results['species'].value_counts())
 
     cl = XGBClassifier(n_jobs = n_threads, max_depth = max_depth, random_state = seed, gamma = 0.05, reg_alpha = 0.01,
-                       reg_lambda = 0.1, subsample = 0.6)
+                       reg_lambda = 0.1, subsample = 0.6, use_label_encoder=False, eval_metric="logloss")
     cl_pu = BaggingPuClassifier(cl)
     data_pd['jd_score'] = cl_pu.fit(scored_pd_iteration[scored_columns], scored_pd_iteration['decoy']).predict_proba(data_pd.loc[:, scored_columns])[:, 0]
 
