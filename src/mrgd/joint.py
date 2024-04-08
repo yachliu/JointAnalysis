@@ -42,7 +42,7 @@ from reports import stats
 
 # joint_analysis(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf, map_size, tfdr, nrt_interval_percent, nrt_width_percent, seed, debug_mode)
 
-def joint_analysis(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf, map_size, tfdr, nrt_interval_percent, nrt_width_percent, seed, debug_mode):
+def mrgd(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf, map_size, tfdr, nrt_interval_percent, nrt_width_percent, seed, debug_mode):
     map_size = 2 ** map_size
     if not os.path.exists(work_dpath):
         os.makedirs(work_dpath)
@@ -156,9 +156,6 @@ def joint_analysis(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf,
 
 
     results_format = stats(results_format, "jd_score", logger)
-
-
-
 
     results_format.to_csv(os.path.join(work_dpath, "jointAnalysis_results.tsv"), sep = "\t")
     logger.info(f'jointAnalysis_results: {os.path.join(work_dpath, "jointAnalysis_results.tsv")}')

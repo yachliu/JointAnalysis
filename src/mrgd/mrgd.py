@@ -1,14 +1,14 @@
 import click
 from multiprocessing import cpu_count
 
-from joint import joint_analysis
+from joint import mrgd
 
 CONTEXT_SETTINGS = dict(help_option_names = ['-h', '--help'], max_content_width = 120)
 
 def print_version(ctx, param, value):
     if not value or ctx.resilient_parsing:
         return
-    click.echo('JointAnalysis Version 1.0.0')
+    click.echo('MRGDisrim Version 1.0.0')
     ctx.exit()
     
 @click.command(context_settings = CONTEXT_SETTINGS)
@@ -25,9 +25,9 @@ def print_version(ctx, param, value):
 @click.option("--nrt_interval_percent", default = "5e-4", show_default = True, type = float, help = "Percentage of the smallest interval in normalized retention time.")
 @click.option("--nrt_width_percent", default = "0.02", show_default = True, type = float, help = "Percentage of the search range in normalized retention time.")
 @click.option("--debug", is_flag = False, help = "Debug mode.")
-def jointAnalysis(db_fpath, chrom_dpath, work_dpath, n_threads, seed, map_size, fdr_precursor, n_mrg, min_nuf,
+def MRGDisrim(db_fpath, chrom_dpath, work_dpath, n_threads, seed, map_size, fdr_precursor, n_mrg, min_nuf,
                   nrt_interval_percent, nrt_width_percent, debug):
-    joint_analysis(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf, map_size, fdr_precursor, nrt_interval_percent, nrt_width_percent, seed, debug)
+    mrgd(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf, map_size, fdr_precursor, nrt_interval_percent, nrt_width_percent, seed, debug)
     
 if __name__ == "__main__":
-    jointAnalysis()
+    MRGDisrim()
