@@ -102,7 +102,7 @@ process OpenSWATH {
 
 process PyProphet {
     publishDir "${params.outputDir}/pyprophet", mode: 'copy'
-    container 'pyprophet/pyprophet:2.1.10'
+    container 'pyprophet/pyprophet:2.2.5'
 
     input:
     path mzML_osw
