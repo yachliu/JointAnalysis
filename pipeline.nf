@@ -29,7 +29,7 @@ Options:
 --nrt_interval_percent   Percentage of the smallest interval in normalized retention time (default: 0.0005)
 --nrt_width_percent      Percentage of the search range in normalized retention time (default: 0.02)
 
-For more information, visit [URL to your documentation or GitHub repository].
+For more information, visit https://github.com/yachliu/JointAnalysis.
 """
 
 // 检测是否使用了 --help 参数
