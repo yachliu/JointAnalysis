@@ -124,7 +124,7 @@ def mrgd(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf, map_size,
                                seed = seed)
 
     logger.info(f'Output results')
-    mr_iter_res = output_format(db_fpath, mr_iter_res)
+    # mr_iter_res = output_format(db_fpath, mr_iter_res)
     results = output_format(db_fpath, mr_iter_res)
 
     trans = []
@@ -157,7 +157,7 @@ def mrgd(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf, map_size,
 
     results_format = stats(results_format, "jd_score", logger)
 
-    results_format.to_csv(os.path.join(work_dpath, "jointAnalysis_results.tsv"), sep = "\t")
+    results_format.to_csv(os.path.join(work_dpath, "jointAnalysis_results.tsv"), sep = "\t", index = False)
     logger.info(f'jointAnalysis_results: {os.path.join(work_dpath, "jointAnalysis_results.tsv")}')
 
     # fdrs, final_cut = calc_score_cut(mr_iter_res, "JOINT_DS", "DECOY", 0.8 * tfdr, smooth_factor = 0.01, plot = False)
