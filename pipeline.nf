@@ -15,11 +15,11 @@ Options:
 --library                Library file path
 --tr_irt                 IRT file path
 --swath_windows_file     Swath windows file path
---outputDir              Output directory for results (default: /mnt/data_nas/mlf/openswath-pyprophet/results)
---openSWATH_paraNumber   Number of parallel processes for OpenSWATH (default: 4)
+--outputDir              Output directory for results 
+--openSWATH_paraNumber   Number of parallel processes for OpenSWATH (default: 10)
 --threads                Number of threads (default: 48)
 --batchsize              Batch size for processing
---classifier             Classifier for PyProphet(XGBoost / LDA) (default: XGBoost)
+--classifier             Classifier for PyProphet (XGBoost/LDA) (default: XGBoost)
 --lever                  Leveraging level: (default: ms1ms2)
 --seed                   Random seed for decoy generation (default: 123)
 --map_size               The size of the temporary database (default: 32)
