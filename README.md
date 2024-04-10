@@ -1,5 +1,5 @@
 # Flowchart of JointAnalysis
-![image](https://github.com/yachliu/JointAnalysis/blob/master/images/workflow.tif)
+![image](https://github.com/yachliu/JointAnalysis/blob/master/images/workflow.png)
 
 # docker
 ```shell
