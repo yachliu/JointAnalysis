@@ -4,7 +4,7 @@
 # docker
 ```shell
 # JointAnalysis
-docker pull meiyulab/jointanalysis:v1
+docker pull meiyulab/jointanalysis:1.0.0
 
 # OpenSwath
 docker pull ghcr.io/openms/openms-executables:3.1.0
@@ -13,19 +13,19 @@ docker pull ghcr.io/openms/openms-executables:3.1.0
 docker pull pyprophet/pyprophet:2.2.5
 
 # MRGD
-docker pull meiyulab/mrgd:v1
+docker pull meiyulab/mrgd:1.0.0
 ```
 # JointAnalysis acquisition
 JointAnalysis is containerized by Docker into an image, the installation tutorial of Docker is described in the [Docker documentation](https://docs.docker.com/engine) (both for Linux and Windows). On your machine, please start a Terminal (PowerShell) session and then execute the following command within the console:
 ```shell
-docker pull meiyulab/jointanalysis:v1
+docker pull meiyulab/jointanalysis:1.0.0
 ```
-This will take a few minutes to pull the Diamond image from [Docker Hub](https://hub.docker.com/r/zeroli/diamond/) to your machine. You can check whether the image `meiyulab/jointanalysis:v1` is successfully pulled by executing `docker images`, and if successfully, it will appear in the images list.  
+This will take a few minutes to pull the Diamond image from [Docker Hub](https://hub.docker.com/r/zeroli/diamond/) to your machine. You can check whether the image `meiyulab/jointanalysis:1.0.0` is successfully pulled by executing `docker images`, and if successfully, it will appear in the images list.  
 
 # Container creation and startup
-Create a container (named JointAnalysis_test) based on the image `meiyulab/analysis:v1` and simultaneously mount the local folder `/path/to/JointAnalysis` to the folder `/path/to/JointAnalysis` (in the container) by running the following command in your terminal:
+Create a container (named JointAnalysis_test) based on the image `meiyulab/analysis:1.0.0` and simultaneously mount the local folder `/path/to/JointAnalysis` to the folder `/path/to/JointAnalysis` (in the container) by running the following command in your terminal:
 ```shell
-docker run -it --name JointAnalysis_test -v /path/to/JointAnalysis:/path/to/JointAnalysis meiyulab/jointanalysis:v1 bash
+docker run -it --name JointAnalysis_test -v /path/to/JointAnalysis:/path/to/JointAnalysis meiyulab/jointanalysis:1.0.0 bash
 ```
 Please change /path/to/JointAnalysis to your own path. The path on your machine should be exactly the same as the path in the container.
 
