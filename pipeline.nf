@@ -129,7 +129,7 @@ process PyProphet {
 
 process JointAnalyse {
     publishDir "${params.outputDir}/mrgd", mode: 'copy'
-    container 'meiyulab/mrgd:v1'
+    container 'meiyulab/mrgd:1.0.0'
 
     input:
     path os_osw
