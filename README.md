@@ -59,7 +59,7 @@ The Nextflow script is saved as a `pipeline.nf` file in the `JointAnalysis` fold
 
 Execute the following command in your terminal to start the analysis of MS data by providing an assay library:
 ```shell
-nextflow run /path/to/JointAnalysis/pipeline.nf  --rawData "/path/to/JointAnalysis/data/rawdata/*.xzML" --library "/path/to/JointAnalysis/data/library/*.pqp" --tr_irt "/path/to/JointAnalysis/data/irt/*.tsv" --swath_windows_file "/path/to/JointAnalysis/data/win/*.tsv" --outputDir "/path/to/JointAnalysis/results"
+nextflow run /path/to/JointAnalysis/pipeline.nf  --rawData "/path/to/JointAnalysis/data/rawdata/*.xzML" --library "/path/to/JointAnalysis/data/library.pqp" --tr_irt "/path/to/JointAnalysis/data/irt.tsv" --swath_windows_file "/path/to/JointAnalysis/data/win.tsv" --outputDir "/path/to/JointAnalysis/results"
 ```
 Please change /path/to/JointAnalysis to your own path. Also the filename.
 
@@ -79,9 +79,9 @@ nextflow run /path/to/JointAnalysis/pipeline.nf --rawData "" --library "" --tr_i
 |parameters|descriptions|
 |---|---|
 |--rawData|Path to raw data. For example: --rawData "/path/to/JointAnalysis/data/rawdata/*.xzML".|
-|--library|Library file path. For example: --library "/path/to/JointAnalysis/data/library/*.pqp".|
-|--tr_irt|IRT file path. For example: --tr_irt "/path/to/JointAnalysis/data/irt/*.tsv".|
-|--swath_windows_file|Swath windows file path. For example: --swath_windows_file "/path/to/JointAnalysis/data/win/*.tsv".|
+|--library|Library file path. For example: --library "/path/to/JointAnalysis/data/library.pqp".|
+|--tr_irt|IRT file path. For example: --tr_irt "/path/to/JointAnalysis/data/irt.tsv".|
+|--swath_windows_file|Swath windows file path. For example: --swath_windows_file "/path/to/JointAnalysis/data/win.tsv".|
 |--outputDir|Output directory for results. For example: --outputDir "/path/to/JointAnalysis/results".|
 |--threads|Number of threads. (default: 48).|
 
