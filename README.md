@@ -15,6 +15,24 @@ docker pull pyprophet/pyprophet:2.2.5
 # MRGD
 docker pull meiyulab/mrgd:1.0.0
 ```
+# An Instruction on the Analysis of Example Datasets
+## Data preparation
+First, please execute the following command in your terminal (PowerShell, if your machine is based on Windows system) to clone the Diamond repository from [my GitHub](https://github.com/yachliu/JointAnalysis) to your own machine. 
+```shell
+git clone https://github.com/yachliu/JointAnalysis.git
+```
+(1) download the example MS data. Provided here are the two raw files, please visit [Raw01](https://ftp.pride.ebi.ac.uk/pride/data/archive/2019/01/PXD011691/BGS_D_D180420_S416-newPrep-DIA-D-S1-1_MHRM_R01_T0.raw), [Raw02](https://ftp.pride.ebi.ac.uk/pride/data/archive/2019/01/PXD011691/BGS_D_D180420_S416-newPrep-DIA-E-S1-2_MHRM_R01_T0.raw) respectively, download and store them in the `/JointAnalysis/data/rawdata` folder. This step will take some minutes.
+    Then you need to convert the .raw data  to .mzML data using the MSConvertGUI application from [ProteoWizard](https://proteowizard.sourceforge.io/download.html). You can refer to [ConvertRawToMzML](https://fragpipe.nesvilab.org/docs/tutorial_convert.html#convert-thermo-dia-raw-files-with-overlappingstaggered-windows).
+
+(2) The library file, irt file, windows file and database file have been stored in the `/JointAnalysis/data/` folder. Note that the library file and the irt file are in a compressed format, so execute the following commands to decompress them.
+```shell
+cd /path/to/JointAnalysis/data
+gunzip ./library.pqp.gz
+gunzip ./irt.tsv.gz
+```
+After all the data is ready, an example tree structure diagram of the `/JointAnalysis/data` folder is as follows:
+
+![image](https://github.com/xmuyulab/Diamond/blob/master/images/data-folder-struction.png)
 # JointAnalysis acquisition
 JointAnalysis is containerized by Docker into an image, the installation tutorial of Docker is described in the [Docker documentation](https://docs.docker.com/engine) (both for Linux and Windows). On your machine, please start a Terminal (PowerShell) session and then execute the following command within the console:
 ```shell
