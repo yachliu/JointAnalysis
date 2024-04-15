@@ -117,11 +117,10 @@ def mrgd(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf, map_size,
     iter_mr_columns = [col for col in mr_iter_features.columns if col not in ignored_columns]
 
     mr_iter_res = calc_results(scored_columns = iter_mr_columns,
-                               initial_column = "MRG_RANK",
-                               initial_ascending = True, 
                                data_pd = mr_iter_features,
                                n_threads = n_threads,
-                               seed = seed)
+                               seed = seed,
+                               n_rawdata = len(rid2rn))
 
     logger.info(f'Output results')
     # mr_iter_res = output_format(db_fpath, mr_iter_res)
@@ -160,12 +159,6 @@ def mrgd(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf, map_size,
     results_format.to_csv(os.path.join(work_dpath, "jointAnalysis_results.tsv"), sep = "\t", index = False)
     logger.info(f'jointAnalysis_results: {os.path.join(work_dpath, "jointAnalysis_results.tsv")}')
 
-    # fdrs, final_cut = calc_score_cut(mr_iter_res, "JOINT_DS", "DECOY", 0.8 * tfdr, smooth_factor = 0.01, plot = False)
-    # mr_iter_fdr = mr_iter_res[mr_iter_res["JOINT_DS"] >= final_cut].reset_index(drop = True)
-    # precursor_fdr = (mr_iter_fdr["DECOY"] == 1).sum() / mr_iter_fdr.shape[0]
-    # logger.info(f'Precursor fdr: {np.around(precursor_fdr, 5)}, Expect fdr: {tfdr}, Number of precursor: {mr_iter_fdr.shape[0]}')
-    # mr_iter_fdr.to_csv(os.path.join(work_dpath, "jointAnalysis_fdr_results.tsv"), sep = "\t")
-    # logger.info(f'jointAnalysis_fdr_results: {os.path.join(work_dpath, "jointAnalysis_fdr_results.tsv")}')
     logger.info(f'Done')
 
 

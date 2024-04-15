@@ -58,42 +58,20 @@ def calc_score_cut(altsv, score_column, label_column, cut_off, smooth_factor = 0
     return fdrs, final_cut
 
 
-def calc_results(scored_columns, initial_column, initial_ascending, data_pd, n_threads, seed):
+def calc_results(scored_columns, data_pd, n_threads, seed, n_rawdata):
 
     max_depth = 5
 
-    scored_pd_iteration = data_pd.sort_values(by = ["run_id", "PRECURSOR_ID", initial_column], ascending = [True, True, initial_ascending])
-    scored_pd_iteration = scored_pd_iteration.drop_duplicates(["run_id", "PRECURSOR_ID"], keep = "first")
-
-    trains = scored_pd_iteration.loc[:, scored_columns].values
-    labels = scored_pd_iteration["decoy"].values
+    trains = data_pd.loc[:, scored_columns].values
+    labels = data_pd["decoy"].values
 
     cl = XGBClassifier(n_jobs = n_threads, max_depth = max_depth, random_state = seed, gamma = 0.05, reg_alpha = 0.01,
-                       reg_lambda = 0.1, subsample = 0.6, use_label_encoder=False, eval_metric="logloss")
+                       reg_lambda = 0.1, subsample = 0.8 / n_rawdata, use_label_encoder=False, eval_metric="logloss")
 
-
+    cl_pu = BaggingPuClassifier(cl)
     cl.fit(trains, labels)
     data_pd["jd_score"] = cl.predict_proba(data_pd.loc[:, scored_columns].values)[:, 0]
     
-    # cl.get_booster().feature_names = scored_columns
-    # fig, ax = plt.subplots(figsize = (15, 15))
-    # xgboost.plot_importance(cl, ax = ax, max_num_features = 20, importance_type = "gain")
-    # plt.show()
-
-    scored_pd_iteration = data_pd.sort_values(by = ["run_id", "PRECURSOR_ID", "jd_score"], ascending = [True, True, False])
-    scored_pd_iteration = scored_pd_iteration.drop_duplicates(["run_id", "PRECURSOR_ID"], keep = "first")
-
-    # fdrs, final_cut = calc_score_cut(scored_pd_iteration, "JOINT_DS", "decoy", 0.005, smooth_factor = 0.01, plot = True)
-    # results = scored_pd_iteration[scored_pd_iteration["JOINT_DS"] >= final_cut]
-    # print(results['decoy'].value_counts())
-    # results = results[results['decoy'] == 0]
-    # print(results['species'].value_counts())
-
-    cl = XGBClassifier(n_jobs = n_threads, max_depth = max_depth, random_state = seed, gamma = 0.05, reg_alpha = 0.01,
-                       reg_lambda = 0.1, subsample = 0.6, use_label_encoder=False, eval_metric="logloss")
-    cl_pu = BaggingPuClassifier(cl)
-    data_pd['jd_score'] = cl_pu.fit(scored_pd_iteration[scored_columns], scored_pd_iteration['decoy']).predict_proba(data_pd.loc[:, scored_columns])[:, 0]
-
     scored_pd_iteration = data_pd.sort_values(by = ["run_id", "PRECURSOR_ID", "jd_score"], ascending = [True, True, False])
     scored_pd_iteration = scored_pd_iteration.drop_duplicates(["run_id", "PRECURSOR_ID"], keep = "first")
 
