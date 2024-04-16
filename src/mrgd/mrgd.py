@@ -20,14 +20,9 @@ def print_version(ctx, param, value):
 @click.option("--seed", default = 123, show_default = True, type = int, help = "Random seed for decoy generation.")
 @click.option("--map_size", default = 32, show_default = True, type = int, help = "The size of the temporary database.")
 @click.option("--fdr_precursor", default = "0.01", show_default = True, type = float, help = "FDR of precursor level.")
-@click.option("--n_mrg", default = "3", show_default = True, type = int, help = "The number of candidate MRGroup.")
-@click.option("--min_nuf", default = "2", show_default = True, type = int, help = "The minimum value of unique features in MRGroup.")
-@click.option("--nrt_interval_percent", default = "5e-4", show_default = True, type = float, help = "Percentage of the smallest interval in normalized retention time.")
 @click.option("--nrt_width_percent", default = "0.02", show_default = True, type = float, help = "Percentage of the search range in normalized retention time.")
-@click.option("--debug", is_flag = False, help = "Debug mode.")
-def MRGDisrim(db_fpath, chrom_dpath, work_dpath, n_threads, seed, map_size, fdr_precursor, n_mrg, min_nuf,
-                  nrt_interval_percent, nrt_width_percent, debug):
-    mrgd(db_fpath, chrom_dpath, work_dpath, n_threads, n_mrg, min_nuf, map_size, fdr_precursor, nrt_interval_percent, nrt_width_percent, seed, debug)
+def MRGDisrim(db_fpath, chrom_dpath, work_dpath, n_threads, seed, map_size, fdr_precursor, nrt_width_percent):
+    mrgd(db_fpath, chrom_dpath, work_dpath, n_threads, map_size, fdr_precursor, nrt_width_percent, seed)
     
 if __name__ == "__main__":
     MRGDisrim()

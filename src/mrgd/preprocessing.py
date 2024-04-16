@@ -60,10 +60,9 @@ def return_pr2tr_id_map(db_fpath) -> dict:
     db_conn.close()
     return p2t_id_map
 
-def return_nrt_intervel(db_fpath, nrt_intervel_percent, nrt_width_percent):
+def return_nrt_width(db_fpath, nrt_width_percent):
     db_conn = sqlite3.connect(db_fpath)
     norm_rts = pd.read_sql(f'SELECT NORM_RT FROM FEATURE', db_conn)["NORM_RT"].values
-    nrt_intervel = (norm_rts.max() - norm_rts.min()) * nrt_intervel_percent
     nrt_width = (norm_rts.max() - norm_rts.min()) * nrt_width_percent
     db_conn.close()
-    return nrt_intervel, nrt_width
+    return nrt_width
