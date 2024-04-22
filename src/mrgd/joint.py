@@ -101,41 +101,50 @@ def mrgd(db_fpath, chrom_dpath, work_dpath, n_threads, map_size, tfdr, nrt_width
                                n_rawdata = len(rid2rn))
 
     logger.info(f'Output results')
-    # mr_iter_res = output_format(db_fpath, mr_iter_res)
-    results = output_format(db_fpath, mr_iter_res)
+    mr_iter_res = output_format(db_fpath, mr_iter_res)
 
+    mr_iter_res = stats(mr_iter_res, "jd_score", logger)
+    mr_iter_res = mr_iter_res.sort_values(["PRECURSOR_ID", "jd_score"], ascending=[True, False])
+    mr_iter_res["peak_group_rank"] = mr_iter_res.groupby('PRECURSOR_ID').cumcount() + 1
+    mr_iter_res["d_score"] = mr_iter_res["jd_score"]
+    mr_iter_res["m_score"] = mr_iter_res["qvalue"]
+    
     trans = []
-    for _, (mseq, charge, decoy) in enumerate(zip(results["FullPeptideName"].values, results["Charge"].values, results["decoy"].values)):
+    for _, (mseq, charge, decoy) in enumerate(zip(mr_iter_res["FullPeptideName"].values, mr_iter_res["Charge"].values, mr_iter_res["decoy"].values)):
         if decoy == 0:
             trans.append(mseq + "_" + str(charge))
         else:
             trans.append("DECOY_" + mseq + "_" + str(charge))
-    results["transition_group_id"] = trans
-    results_format = results.loc[:, ["transition_group_id",
-                                    "decoy",
-                                    "run_id",
-                                    "filename", 
-                                    "RT",
-                                    "assay_rt",
-                                    "delta_rt",
-                                    "iRT",
-                                    "Sequence",
-                                    "FullPeptideName",
-                                    "Charge",
-                                    "mz",
-                                    "Intensity",
-                                    "aggr_prec_Peak_Area",
-                                    "aggr_prec_Peak_Apex",
-                                    "leftWidth",
-                                    "rightWidth",
-                                    "ProteinName",
-                                    "jd_score"]]
+    mr_iter_res["transition_group_id"] = trans
+    results_format = mr_iter_res.loc[:, ["transition_group_id",
+                                        "decoy",
+                                        "run_id",
+                                        "filename", 
+                                        "RT",
+                                        "assay_rt",
+                                        "delta_rt",
+                                        "iRT",
+                                        "assay_iRT",
+                                        "delta_iRT",
+                                        "id",
+                                        "Sequence",
+                                        "FullPeptideName",
+                                        "Charge",
+                                        "mz",
+                                        "Intensity",
+                                        "aggr_prec_Peak_Area",
+                                        "aggr_prec_Peak_Apex",
+                                        "leftWidth",
+                                        "rightWidth",
+                                        "peak_group_rank",
+                                        "d_score",
+                                        "m_score",
+                                        "ProteinName"]]
 
 
-    results_format = stats(results_format, "jd_score", logger)
-
-    results_format.to_csv(os.path.join(work_dpath, "jointAnalysis_results.tsv"), sep = "\t", index = False)
-    logger.info(f'jointAnalysis_results: {os.path.join(work_dpath, "jointAnalysis_results.tsv")}')
+    result_saved_fpath = os.path.join(work_dpath, "jointAnalysis_results.tsv")
+    results_format.to_csv(result_saved_fpath, sep = "\t", index = False)
+    logger.info(f'jointAnalysis_results: {result_saved_fpath}')
 
     logger.info(f'Done')
 

@@ -175,6 +175,15 @@ def return_pepid2mseq(db_fpath, data):
     data["FullPeptideName"] = data["PEPTIDE_ID"].apply(lambda x : pepid2mseq[x])
     return data
 
+def return_precid2assayirt(db_fpath, data):
+    conn = sqlite3.connect(db_fpath)
+    precid2assayirt = pd.read_sql(f'SELECT ID, LIBRARY_RT FROM PRECURSOR', conn)
+    conn.close()
+    precid2assayirt = precid2assayirt.set_index("ID")["LIBRARY_RT"].to_dict()
+    data["assay_iRT"] = data["PRECURSOR_ID"].apply(lambda x : precid2assayirt[x])
+    return data
+
+
 def output_format(db_fpath, mr_iter_res):
     mr_iter_res = mr_iter_res.reset_index()
     mr_iter_res = return_precid2pepid(db_fpath, mr_iter_res)
@@ -188,8 +197,11 @@ def output_format(db_fpath, mr_iter_res):
     mr_iter_res = return_pepid2seq(db_fpath, mr_iter_res)
     mr_iter_res = return_pepid2mseq(db_fpath, mr_iter_res)
     mr_iter_res["assay_rt"] = mr_iter_res["RT"] - mr_iter_res["delta_rt"]
-    
 
+    mr_iter_res["id"] = mr_iter_res["FEATURE_ID"]
+    mr_iter_res = return_precid2assayirt(db_fpath, mr_iter_res)
+    mr_iter_res["delta_iRT"] = mr_iter_res["iRT"] - mr_iter_res["assay_iRT"]
+    
     scored_columns = []
     bases_columns = []
     for col in mr_iter_res.columns:
