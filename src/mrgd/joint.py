@@ -24,9 +24,9 @@ def mrgd(db_fpath, chrom_dpath, work_dpath, n_threads, map_size, tfdr, nrt_width
     map_size = 2 ** map_size
     if not os.path.exists(work_dpath):
         os.makedirs(work_dpath)
-    log_fpath = os.path.join(work_dpath, "JointAnalysis.log")
+    log_fpath = os.path.join(work_dpath, "MRGDiscrim.log")
     logger.add(log_fpath, format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}", mode="w")
-    logger.info(f'JointAnalysis Workflow')
+    logger.info(f'MRGDiscrim Workflow')
 
 
     logger.info(f'Check db_infile: {db_fpath}')
