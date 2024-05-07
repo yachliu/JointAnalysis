@@ -5,45 +5,94 @@ import numpy as np
 
 from bisect import bisect
 
+# def organize_chroms_dimension(run_p_chroms: list, run_p_rts: list) -> np.array:
+#     pr_chrom = np.array(run_p_chroms[0])
+#     fr_chroms = np.array(run_p_chroms[1:])
+#     pr_rt = run_p_rts[0]
+#     fr_rt = run_p_rts[1]
+
+#     for left_i in range(len(fr_rt)):
+#         left_rtid = bisect(pr_rt, fr_rt[left_i]) - 1
+#         if left_rtid >= 0:
+#             break
+#     if (left_i - left_rtid) == 0:
+#         pass
+#     elif left_rtid - left_i > 0:
+#         pr_rt = pr_rt[left_rtid - left_i :]
+#         pr_chrom = pr_chrom[left_rtid - left_i :]
+#     elif left_i - left_rtid > 0:
+#         fr_chroms = fr_chroms[:, left_i - left_rtid:]
+#         fr_rt = fr_rt[left_i - left_rtid:]
+
+#     rev_fr_rt = list(-np.array(fr_rt)[::-1])
+#     rev_pr_rt = list(-np.array(pr_rt)[::-1])
+
+#     for right_i in range(len(rev_pr_rt)):
+#         right_rtid = bisect(rev_fr_rt, rev_pr_rt[right_i]) - 1
+#         if right_rtid >= 0:
+#             break
+#     if (right_i - right_rtid) == 0:
+#         pass
+#     elif right_rtid - right_i > 0:
+#         fr_rt = fr_rt[: -(right_rtid - right_i)]
+#         fr_chroms = fr_chroms[:, : -(right_rtid - right_i)]
+#     elif right_i - right_rtid > 0:
+#         pr_rt = pr_rt[: -(right_i - right_rtid)]
+#         pr_chrom = pr_chrom[: -(right_i - right_rtid)]
+
+#     run_p_xics = np.concatenate((pr_chrom[np.newaxis, :], fr_chroms), axis = 0)
+
+#     return run_p_xics, pr_rt
+
+
 def organize_chroms_dimension(run_p_chroms: list, run_p_rts: list) -> np.array:
     pr_chrom = np.array(run_p_chroms[0])
     fr_chroms = np.array(run_p_chroms[1:])
-    pr_rt = run_p_rts[0]
-    fr_rt = run_p_rts[1]
+    pr_rt = np.array(run_p_rts[0])
+    fr_rt = np.array(run_p_rts[1])
 
-    for left_i in range(len(fr_rt)):
-        left_rtid = bisect(pr_rt, fr_rt[left_i]) - 1
-        if left_rtid >= 0:
-            break
-    if (left_i - left_rtid) == 0:
-        pass
-    elif left_rtid - left_i > 0:
-        pr_rt = pr_rt[left_rtid - left_i :]
-        pr_chrom = pr_chrom[left_rtid - left_i :]
-    elif left_i - left_rtid > 0:
-        fr_chroms = fr_chroms[:, left_i - left_rtid:]
-        fr_rt = fr_rt[left_i - left_rtid:]
+    if len(pr_rt) == len(fr_rt):
+        return np.array(run_p_chroms), pr_rt
+    else:
 
-    rev_fr_rt = list(-np.array(fr_rt)[::-1])
-    rev_pr_rt = list(-np.array(pr_rt)[::-1])
+        for psi in range(len(pr_rt)):
+            psi_left = pr_rt[psi]
+            psi_right = pr_rt[psi+1]
+            sleft_label = fr_rt >= psi_left
+            sright_label = fr_rt < psi_right
+            s_label = sleft_label & sright_label
+            if np.sum(s_label) > 0:
+                break
+        fsi = np.where(s_label)[0][0]
 
-    for right_i in range(len(rev_pr_rt)):
-        right_rtid = bisect(rev_fr_rt, rev_pr_rt[right_i]) - 1
-        if right_rtid >= 0:
-            break
-    if (right_i - right_rtid) == 0:
-        pass
-    elif right_rtid - right_i > 0:
-        fr_rt = fr_rt[: -(right_rtid - right_i)]
-        fr_chroms = fr_chroms[:, : -(right_rtid - right_i)]
-    elif right_i - right_rtid > 0:
-        pr_rt = pr_rt[: -(right_i - right_rtid)]
-        pr_chrom = pr_chrom[: -(right_i - right_rtid)]
+        for fei in range(len(fr_rt) - 1, 0, -1):
+            fei_left = fr_rt[fei - 1]
+            fei_right = fr_rt[fei]
+            sleft_label = pr_rt > fei_left
+            sright_label = pr_rt <= fei_right
+            s_label = sleft_label & sright_label
+            if np.sum(s_label) > 0:
+                break
+        pei = np.where(s_label)[0][0]
 
-    run_p_xics = np.concatenate((pr_chrom[np.newaxis, :], fr_chroms), axis = 0)
+        part_pr_chrom = pr_chrom[psi: pei+1]
+        part_fr_chroms = fr_chroms[:, fsi:fei+1]
+        part_pr_length = len(part_pr_chrom)
+        part_fr_length = len(part_fr_chroms[0])
+        run_pr_rt = pr_rt[psi: pei+1]
 
-    return run_p_xics, pr_rt
+        if part_pr_length > part_fr_length:
+            part_pr_chrom = part_pr_chrom[: part_fr_length]
+            run_pr_rt = run_pr_rt[: part_fr_length]
+        elif part_pr_length < part_fr_length:
+            part_fr_chroms = part_fr_chroms[:, : part_pr_length]
+        else:
+            pass
+        run_p_xics = np.concatenate((part_pr_chrom[np.newaxis, :], part_fr_chroms), axis = 0)
 
+        assert run_p_xics.shape[1] == len(run_pr_rt), print("Error")
+
+        return run_p_xics, run_pr_rt
 
 @numba.jit(nopython = True)
 def smooth_array_nb(arr):
